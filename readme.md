@@ -11,7 +11,6 @@
  * [phpmyadmin:latest](https://hub.docker.com/_/phpmyadmin)
  * [Mysql 5.7.22](https://hub.docker.com/_/mysql)
  * [Node 16 LTS](https://github.com/nodesource/distributions#debmanual)
- * [Mail Hog](https://github.com/mailhog/MailHog)
 
 
  # PROCEDIMENTO A SER EXECUTADO
