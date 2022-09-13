@@ -18,11 +18,12 @@
 
 Clone o repositório 
 
+**é necessário que você tenha o docker instalado no seu computador**
 
 
 ----
 
-Vamos fazer o deploy dos containers do projeto
+Vamos fazer o deploy dos containers do projeto entrando no diretório clonado e digitando os seguintes comandos
 ```sh
 docker-compose up -d
 ```
