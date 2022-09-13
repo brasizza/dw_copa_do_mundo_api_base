@@ -28,6 +28,9 @@ Vamos fazer o deploy dos containers do projeto entrando no diretório clonado e 
 docker-compose up -d
 ```
 
+Depois disso vamos abrir o phpmyadmin (http://localhost:8181)  e criar um banco de dados com o nome '**dw-copa-do-mundo**'
+
+
 Para acessar o container
 ```sh
 docker-compose exec app bash
@@ -46,10 +49,16 @@ e depois
 php artisan config:cache
 ```
 
+e por ultimo
+```sh
+php artisan migrate
+```
 
-- Para acessar a sua aplicação  http://localhost:8180
-- Para acessar o phpmyadmin http://localhost:8181
-- Para acessar o e-mail http://localhost:8100/
+Urls uteis
+
+- Para acessar a sua aplicação  http://localhost:8180 ou  http://ipinterno:8180
+- Para acessar o phpmyadmin http://localhost:8181 ou http://ipinterno:8181
+- Para acessar o e-mail http://localhost:8100/ ou http://ipinterno:8100
 
 <br>
 

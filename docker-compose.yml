@@ -5,7 +5,7 @@ services:
         container_name: dartweek-academia-do-flutter
         build:
             args:
-                user: wesllycode
+                user: academia-do-flutter
                 uid: 1000
             context: ./
             dockerfile: Dockerfile
@@ -15,7 +15,7 @@ services:
         volumes:
             - ./dw-copa-do-mundo/:/var/www
         environment:
-            - APP_NAME=wesllycode
+            - APP_NAME=academia-do-flutter
             - DB_DATABASE=laravel
             - DB_PASSWORD=root
             - DB_USERNAME=root
@@ -26,14 +26,6 @@ services:
             - SESSION_DRIVER=redis
             - REDIS_PASSWORD=null
             - REDIS_PORT=6379
-            - MAIL_MAILER=smtp
-            - MAIL_HOST=mailhog
-            - MAIL_PORT=1025
-            - MAIL_USERNAME=null
-            - MAIL_PASSWORD=null
-            - MAIL_ENCRYPTION=null
-            - MAIL_FROM_ADDRES=my-email@example.com
-            - MAIL_FROM_NAME=wesllycode
         networks:
             - dartweek-academia-do-flutter
         depends_on:
@@ -90,20 +82,18 @@ services:
         - dartweek-academia-do-flutter
       depends_on:
         - mysql
-
     # redis
     redis:
       container_name: redis
       image: redis:latest
       networks:
           - dartweek-academia-do-flutter
-
     # queue
     queue:
         container_name: queue
         build:
             args:
-                user: wesllycode
+                user: academia-do-flutter
                 uid: 1000
             context: ./
             dockerfile: Dockerfile
@@ -115,16 +105,6 @@ services:
             - redis
             - app
             - nginx
-        networks:
-            - dartweek-academia-do-flutter
-
-    # Servidor de E-mail
-    mailhog:
-        image: mailhog/mailhog:latest
-        container_name: mailhog
-        ports:
-            - "8003:1025"
-            - "8100:8025"
         networks:
             - dartweek-academia-do-flutter
 
