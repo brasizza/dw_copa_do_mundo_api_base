@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StickerController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+Route::group([
+
+    'prefix' => 'auth'
+
+], function ($router) {
+    $router->post('/',  [AuthController::class, 'login']);
+
+    $router->post('logout', [AuthController::class, 'logout'])->middleware('auth');
+    $router->post('refresh', [AuthController::class, 'refresh'])->middleware('auth');
 });
+Route::post('/register', [UserController::class, 'store']);
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth');
+
+Route::post('/sticker', [StickerController::class,'store'])->middleware('auth');
+

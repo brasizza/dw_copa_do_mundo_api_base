@@ -14,23 +14,12 @@ services:
         working_dir: /var/www/
         volumes:
             - ./dw-copa-do-mundo/:/var/www
-        environment:
-            - APP_NAME=academia-do-flutter
-            - DB_DATABASE=laravel
-            - DB_PASSWORD=root
-            - DB_USERNAME=root
-            - DB_HOST=mysql
-            - REDIS_HOST=redis
-            - CACHE_DRIVER=redis
-            - QUEUE_CONNECTION=redis
-            - SESSION_DRIVER=redis
-            - REDIS_PASSWORD=null
-            - REDIS_PORT=6379
+            - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+
         networks:
             - dartweek-academia-do-flutter
         depends_on:
             - mysql
-            - redis
 
     # nginx
     nginx:
@@ -40,6 +29,7 @@ services:
         ports:
             - 8180:80
         volumes:
+            - ./docker/php/php.ini:/usr/local/etc/php/php.ini
             - ./dw-copa-do-mundo:/var/www
             - ./docker/nginx/:/etc/nginx/conf.d/
         networks:
@@ -50,20 +40,28 @@ services:
     # db mysql
     mysql:
         container_name: mysql
-        image: mariadb:10.5.8
+        image: mariadb:latest
         restart: always
         tty: true
         environment:
-            MYSQL_DATABASE: laravel
+            MYSQL_DATABASE:  laravel
             MYSQL_ROOT_PASSWORD: root
             MYSQL_PASSWORD: root
-            MYSQL_USER: root
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         volumes:
             - ./docker/mysql/dbdata:/var/lib/mysql
         ports:
-            - 3388:3306
+            - 8889:3306
+        networks:
+            - dartweek-academia-do-flutter
+     # Servidor de E-mail
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: mailhog
+        ports:
+            - "8003:1025"
+            - "8100:8025"
         networks:
             - dartweek-academia-do-flutter
 
@@ -82,32 +80,7 @@ services:
         - dartweek-academia-do-flutter
       depends_on:
         - mysql
-    # redis
-    redis:
-      container_name: redis
-      image: redis:latest
-      networks:
-          - dartweek-academia-do-flutter
-    # queue
-    queue:
-        container_name: queue
-        build:
-            args:
-                user: academia-do-flutter
-                uid: 1000
-            context: ./
-            dockerfile: Dockerfile
-        restart: unless-stopped
-        command: "php artisan queue:work"
-        volumes:
-            - ./dw-copa-do-mundo:/var/www
-        depends_on:
-            - redis
-            - app
-            - nginx
-        networks:
-            - dartweek-academia-do-flutter
-
+   
 networks:
     dartweek-academia-do-flutter:
         driver: bridge
