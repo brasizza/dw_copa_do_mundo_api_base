@@ -82,6 +82,25 @@
                 ]
             }
         },
+        "/api/stickers": {
+            "get": {
+                "tags": [
+                    "Sticker"
+                ],
+                "summary": "Listar todas as figurinhas do sistema.",
+                "operationId": "be54cc3ecae4c905a6684c32af892fbc",
+                "responses": {
+                    "200": {
+                        "description": "Dados das figurinhas"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/sticker": {
             "post": {
                 "tags": [
@@ -132,6 +151,33 @@
             }
         },
         "/api/sticker/{id}": {
+            "get": {
+                "tags": [
+                    "Sticker"
+                ],
+                "summary": "Detalhe de uma figurinha específica.",
+                "operationId": "edeaf21c3ce65d0607d574d11432d835",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id da figurinha",
+                        "schema": {
+                            "type": "Int"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da figurinha"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Sticker"

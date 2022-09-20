@@ -36,20 +36,31 @@ class StickerController extends Controller
 {
 
     use ApiResponser;
-    /**
-     * Display a listing of the resource.
+     /**
+     * Listar todas as figurinhas do sistema.
      *
      * @return \Illuminate\Http\Response
+      * @OA\Get(
+     *     path="/api/stickers",
+     *     tags={"Sticker"},
+ *     @OA\Response(
+     *         response=200,
+     *         description="Dados das figurinhas"
+     *     ),
+
+     *  security={{ "apiAuth": {} }}
+     * )
+
      */
     public function index()
     {
-        //
+        $sticker = Sticker::all();
+        return  $this->successResponse($sticker);
     }
 
 
     private function buildImage($file)
     {
-
 
         $info = pathinfo($file->getClientOriginalName());
         if (!isset($info['extension'])) {
@@ -151,14 +162,32 @@ class StickerController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Detalhe de uma figurinha específica.
      *
-     * @param  \App\Models\Sticker  $sticker
      * @return \Illuminate\Http\Response
+      * @OA\Get(
+     *     path="/api/sticker/{id}",
+     *     tags={"Sticker"},
+ *     @OA\Response(
+     *         response=200,
+     *         description="Dados da figurinha"
+     *     ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id da figurinha",
+     *         @OA\Schema(
+     *             type="Int",
+     *         )
+     *     ),
+     *  security={{ "apiAuth": {} }}
+     * )
+
      */
-    public function show(Sticker $sticker)
+    public function show($id)
     {
-        //
+        $sticker = Sticker::findOrFail($id);
+       return  $this->successResponse($sticker);
     }
 
     /**

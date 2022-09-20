@@ -31,8 +31,8 @@ class UserController extends Controller
      *     path="/api/register",
      *     tags={"Auth"},
      *     operationId="Cadatrar usuário",
-* @OA\RequestBody(
-*         @OA\MediaType(
+     * @OA\RequestBody(
+     *         @OA\MediaType(
      *             mediaType="text/json",
      *             @OA\Schema(
      *
