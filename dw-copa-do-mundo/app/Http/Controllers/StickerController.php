@@ -1,15 +1,41 @@
 <?php
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      x={
+ *          "logo": {
+ *              "url": "https://via.placeholder.com/190x90.png?text=L5-Swagger"
+ *          }
+ *      },
+ *      title="L5 OpenApi",
+ *      description="L5 Swagger OpenApi description",
+ *      @OA\Contact(
+ *          email="darius@matulionis.lt"
+ *      ),
+ *     @OA\License(
+ *         name="Apache 2.0",
+ *         url="https://www.apache.org/licenses/LICENSE-2.0.html"
+ *     )
+ * )
+ */
+
 namespace App\Http\Controllers;
 
 use App\Helpers\RedimensionarImagem;
 use App\Http\Requests\StickerRequest;
 use App\Models\Sticker;
+use App\Traits\ApiResponser;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use OpenApi\Annotations as OA;
 
 class StickerController extends Controller
 {
+
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -20,46 +46,107 @@ class StickerController extends Controller
         //
     }
 
+
+    private function buildImage($file)
+    {
+
+
+        $info = pathinfo($file->getClientOriginalName());
+        if (!isset($info['extension'])) {
+            $extension = 'png';
+        } else {
+            $extension =  $info['extension'];
+        }
+        $nome = 'produto_' . uniqid() . '.' . $extension;
+        $redimensionar = new RedimensionarImagem();
+        $redimensionar->AdicionaTamanho(1000);
+        $redimensionar->setQualityPhoto(0);
+        $redimensionar->__set('ArqOrigem', (base64_encode($file->get()))); // adiciona um diretÃ³rio  de onde estÃ¡ o arquivo pra conversÃ£o
+        $convertido = $redimensionar->executar();  //
+
+        return $convertido;
+    }
+
+
     /**
-     * Store a newly created resource in storage.
+     * Adicionar figurinhas ao sistema.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+
+     * @OA\Post(
+     *     path="/api/sticker",
+     *     tags={"Sticker"},
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid input"
+     *     ),
+     * @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *
+     *  @OA\Property(
+     *                     description="Nome do Jogador",
+     *                     property="sticker_name",
+     *                     type="text",
+     *                ),
+     *  @OA\Property(
+     *                     description="Código do país",
+     *                     property="sticker_code",
+     *                     type="text",
+     *                ),
+     *
+     *  @OA\Property(
+     *                     description="Número da figurinha",
+     *                     property="sticker_number",
+     *                     type="text",
+     *                ),
+     *
+     *    @OA\Property(
+     *                     description="file to upload",
+     *                     property="sticker_image_upload",
+     *                     type="file",
+     *                ),
+
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Figurinha inserida com sucesso"
+     *     ),
+     *  security={{ "apiAuth": {} }}
+     * )
      */
-
-
-    private function buildImage($file){
-
-
-            $info = pathinfo($file->getClientOriginalName());
-            if(!isset($info['extension'])){
-                $extension = 'png';
-            }else{
-                $extension=  $info['extension'];
-            }
-            $nome = 'produto_' . uniqid() . '.' . $extension;
-            $redimensionar = new RedimensionarImagem();
-            $redimensionar->AdicionaTamanho(1000);
-            $redimensionar->setQualityPhoto(0);
-            $redimensionar->__set('ArqOrigem', (base64_encode($file->get()))); // adiciona um diretÃ³rio  de onde estÃ¡ o arquivo pra conversÃ£o
-            $convertido = $redimensionar->executar();  //
-
-            return $convertido;
-    }
-
 
     public function store(StickerRequest $request)
     {
 
         $postData =  ($request->all());
-
-        if($request->hasFile('sticker_image')){
-
-            $image = $this->buildImage($request->sticker_image);
-            $imageName = $request->sticker_player_code."_".$request->sticker_number.'.png';
-            Storage::disk('public')->put('/stickers/'.$imageName, $image);
-            dd($imageName);
+        if ($request->hasFile('sticker_image_upload')) {
+            $image = $this->buildImage($request->sticker_image_upload);
+            $imageName = $request->sticker_code . "_" . $request->sticker_number . '.png';
+            $path_imagem = '/stickers/' . $imageName;
+            Storage::disk('public')->put($path_imagem, $image);
+        } else {
+            $path_imagem = '';
         }
+
+        $postData['sticker_image'] = $path_imagem;
+
+        try {
+            $sticker = Sticker::create($postData);
+        } catch (QueryException $e) {
+            $errorCode = $e->errorInfo[1];
+            if ($errorCode == 1062) {
+
+                return $this->errorResponse('This sticker is duplicated', Response::HTTP_CONFLICT);
+
+                // houston, we have a duplicate entry problem
+            }
+        }
+        return $this->successResponse($sticker);
         //
     }
 
@@ -75,15 +162,88 @@ class StickerController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza uma figurinha especifica
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Sticker  $sticker
      * @return \Illuminate\Http\Response
+     * @OA\Post(
+     *     path="/api/sticker/{id}",
+     *     tags={"Sticker"},
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid input"
+     *     ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id da figurinha",
+     *         @OA\Schema(
+     *             type="Int",
+     *         )
+     *     ),
+
+     * @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *
+     *  @OA\Property(
+     *                     description="Nome do Jogador",
+     *                     property="sticker_name",
+     *                     type="text",
+     *                ),
+     *  @OA\Property(
+     *                     description="Código do país",
+     *                     property="sticker_code",
+     *                     type="text",
+     *                ),
+     *
+     *  @OA\Property(
+     *                     description="Número da figurinha",
+     *                     property="sticker_number",
+     *                     type="text",
+     *                ),
+     *
+     *    @OA\Property(
+     *                     description="file to upload",
+     *                     property="sticker_image_upload",
+     *                     type="file",
+     *                ),
+
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Figurinha inserida com sucesso"
+     *     ),
+     *  security={{ "apiAuth": {} }}
+     * )
      */
-    public function update(Request $request, Sticker $sticker)
+    public function update($id, StickerRequest $request)
     {
-        //
+
+        $sticker = Sticker::findOrFail($id);
+
+
+
+        if ($request->hasFile('sticker_image_upload')) {
+
+            if (!empty($sticker['sticker_image'])) {
+                $old_image = $sticker->sticker_code . "_" . $sticker->sticker_number . '.png';
+                $path_imagem_old = '/stickers/' . $old_image;
+               Storage::disk('public')->delete([$path_imagem_old]);
+            }
+            $image = $this->buildImage($request->sticker_image_upload);
+            $sticker->fill($request->all());
+            $imageName = $request->sticker_code . "_" . $request->sticker_number . '.png';
+            $path_imagem = '/stickers/' . $imageName;
+            Storage::disk('public')->put($path_imagem, $image);
+            $sticker['sticker_image'] = $path_imagem;
+        }
+        $sticker->save();
+        return  $this->successResponse($sticker);
     }
 
     /**

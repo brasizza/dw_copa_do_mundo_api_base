@@ -33,4 +33,5 @@ Route::post('/register', [UserController::class, 'store']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth');
 
 Route::post('/sticker', [StickerController::class,'store'])->middleware('auth');
+Route::post('/sticker/{id}', [StickerController::class,'update'])->middleware('auth');
 

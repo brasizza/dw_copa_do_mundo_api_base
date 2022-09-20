@@ -4,18 +4,67 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
+
 class AuthController extends Controller
 {
     /**
-     * Get a JWT via given credentials.
+     * Fazer o login e pegar o token de autorização.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @OA\SecurityScheme(
+     *     type="http",
+     *     description="Login with email and password to get the authentication token",
+     *     name="Token based Based",
+     *     in="header",
+     *     scheme="bearer",
+     *     bearerFormat="JWT",
+     *     securityScheme="apiAuth",
+     * )
+     * Authenticar seu usuário.
+     * @OA\Thing(x={"order":2}
+     * @OA\Post(
+     *     path="/api/auth",
+     *     tags={"Auth"},
+     *     operationId="login",
+     * @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="text/json",
+     *             @OA\Schema(
+     *
+     *  @OA\Property(
+     *                     description="E-mail cadastrado",
+     *                     property="email",
+     *                      example="email@email.com",
+     *                     type="text",
+     *                ),
+     *
+     *  @OA\Property(
+     *                     description="Senha cadastrada",
+     *                     property="password",
+     *                 example="password",
+     *                     type="text",
+     *                ),
+
+     *             )
+     *         )
+     *     ),
+
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login feito com sucesso",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Login não autorizado",
+     *     ),
+     *
+     * )
      */
     public function login()
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
 
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -24,9 +73,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User.
+     * Recuperar informações do usuário logado.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(
+     *     path="/api/me",
+     *     tags={"Auth"},
+     *     operationId="Me",
+     *      @OA\Response(
+     *         response=200,
+     *         description="Dados do usuário logado",
+     *     ),
+     *  security={{ "apiAuth": {} }}
+     * )
      */
     public function me()
     {
@@ -34,9 +93,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Log the user out (Invalidate the token).
+     * Deslogar e invalidar o token
      *
      * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/auth/logout",
+     *     tags={"Auth"},
+     *     operationId="logout",
+     *      @OA\Response(
+     *         response=200,
+     *         description="Usuário deslogado e o token invalidado",
+     *     ),
+     *  security={{ "apiAuth": {} }}
+     * )
      */
     public function logout()
     {
@@ -50,7 +119,8 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh(){
+    public function refresh()
+    {
         return $this->respondWithToken(auth()->refresh());
     }
 
@@ -61,5 +131,4 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
 }

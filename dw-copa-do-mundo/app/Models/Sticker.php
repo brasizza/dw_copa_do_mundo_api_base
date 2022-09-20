@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use OpenApi\Annotations as OA;
+
+
+
 class Sticker extends Model
 {
     use HasFactory;
@@ -12,7 +16,7 @@ class Sticker extends Model
 
     protected $fillable = [
 'sticker_code',
-'sticker_player_name',
+'sticker_name',
 'sticker_number',
 'sticker_image',
 'token'

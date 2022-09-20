@@ -17,10 +17,12 @@ return new class extends Migration
         Schema::create('stickers', function (Blueprint $table) {
             $table->id();
             $table->string('sticker_code');
-            $table->string('sticker_player_name');
+            $table->string('sticker_name');
             $table->string('sticker_number');
             $table->text('sticker_image')->nullable(true);
             $table->uuid('token')->default(Str::uuid());
+            $table->unique(['sticker_code', 'sticker_number']);
+
             $table->timestamps();
         });
     }

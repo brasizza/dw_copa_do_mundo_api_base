@@ -31,6 +31,7 @@ class UserRequest extends FormRequest
 
 
 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -48,8 +49,7 @@ class UserRequest extends FormRequest
         return [
 
             'name' => 'required|min:3|max:50',
-            'email' => 'email',
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+            'password' => 'required|min:6|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:6',
             'email' => 'required|email|unique:users,email,'.$id.',id'
 

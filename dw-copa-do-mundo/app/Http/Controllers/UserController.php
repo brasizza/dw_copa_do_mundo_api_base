@@ -21,10 +21,62 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Registrar usuário no sistema
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+
+     * Authenticar seu usuário.
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags={"Auth"},
+     *     operationId="Cadatrar usuário",
+* @OA\RequestBody(
+*         @OA\MediaType(
+     *             mediaType="text/json",
+     *             @OA\Schema(
+     *
+     *  @OA\Property(
+     *                     description="Nome",
+     *                     property="name",
+     *                      example="Meu nome",
+     *                     type="text",
+     *                ),
+      *  @OA\Property(
+     *                     description="E-mail",
+     *                     property="email",
+     *                 example="email@email.com.br",
+     *                     type="email",
+     *                ),
+      *  @OA\Property(
+     *                     description="Minha senha",
+     *                     property="password",
+     *                 example="password",
+     *                     type="password",
+     *                ),
+     *  @OA\Property(
+     *                     description="Confirmação de senha",
+     *                     property="password_confirmation",
+     *                 example="password",
+     *                     type="password",
+     *                ),
+
+     *             ),
+     * ),
+     * ),
+     *
+
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login feito com sucesso",
+     *     ),
+
+     *     @OA\Response(
+     *         response=422,
+     *         description="Falha na validação dos campos",
+     * )
+     *
+     * )
      */
     public function store(UserRequest $request)
     {

@@ -1,0 +1,264 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Academia do flutter Swagger",
+        "description": "Este é um teste de todos os endpoints que estão disponíveis para uso no dartweek",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Fazer o login e pegar o token de autorização.",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "text/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "E-mail cadastrado",
+                                        "type": "text",
+                                        "example": "email@email.com"
+                                    },
+                                    "password": {
+                                        "description": "Senha cadastrada",
+                                        "type": "text",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login feito com sucesso"
+                    },
+                    "401": {
+                        "description": "Login não autorizado"
+                    }
+                }
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Recuperar informações do usuário logado.",
+                "operationId": "Me",
+                "responses": {
+                    "200": {
+                        "description": "Dados do usuário logado"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Deslogar e invalidar o token",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Usuário deslogado e o token invalidado"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/sticker": {
+            "post": {
+                "tags": [
+                    "Sticker"
+                ],
+                "summary": "Adicionar figurinhas ao sistema.",
+                "operationId": "1c9821e897287e495749885799528dac",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "sticker_name": {
+                                        "description": "Nome do Jogador",
+                                        "type": "text"
+                                    },
+                                    "sticker_code": {
+                                        "description": "Código do país",
+                                        "type": "text"
+                                    },
+                                    "sticker_number": {
+                                        "description": "Número da figurinha",
+                                        "type": "text"
+                                    },
+                                    "sticker_image_upload": {
+                                        "description": "file to upload",
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Invalid input"
+                    },
+                    "200": {
+                        "description": "Figurinha inserida com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/sticker/{id}": {
+            "post": {
+                "tags": [
+                    "Sticker"
+                ],
+                "summary": "Atualiza uma figurinha especifica",
+                "operationId": "04870a0370268c1a7eeb4e555663420d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id da figurinha",
+                        "schema": {
+                            "type": "Int"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "sticker_name": {
+                                        "description": "Nome do Jogador",
+                                        "type": "text"
+                                    },
+                                    "sticker_code": {
+                                        "description": "Código do país",
+                                        "type": "text"
+                                    },
+                                    "sticker_number": {
+                                        "description": "Número da figurinha",
+                                        "type": "text"
+                                    },
+                                    "sticker_image_upload": {
+                                        "description": "file to upload",
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Invalid input"
+                    },
+                    "200": {
+                        "description": "Figurinha inserida com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrar usuário no sistema",
+                "operationId": "Cadatrar usuário",
+                "requestBody": {
+                    "content": {
+                        "text/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nome",
+                                        "type": "text",
+                                        "example": "Meu nome"
+                                    },
+                                    "email": {
+                                        "description": "E-mail",
+                                        "type": "email",
+                                        "example": "email@email.com.br"
+                                    },
+                                    "password": {
+                                        "description": "Minha senha",
+                                        "type": "password",
+                                        "example": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Confirmação de senha",
+                                        "type": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login feito com sucesso"
+                    },
+                    "422": {
+                        "description": "Falha na validação dos campos"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiAuth": {
+                "type": "http",
+                "description": "Login with email and password to get the authentication token",
+                "name": "Token based Based",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Autenticação do usuário"
+        },
+        {
+            "name": "Sticker",
+            "description": "Cadastro e visualização das figurinhas"
+        }
+    ]
+}

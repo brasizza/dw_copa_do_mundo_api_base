@@ -34,7 +34,10 @@ class StickerRequest extends FormRequest
     public function rules()
     {
         return [
-            'sticker_image' => 'mimes:jpeg,bmp,png|max:2048'
+            'sticker_image' => 'mimes:jpeg,bmp,png|max:2048',
+            'sticker_name' => 'required|min:3',
+            'sticker_code' => 'required|min:2|max:5',
+            'sticker_number' => 'required|min:1|max:4',
 
         ];
     }
