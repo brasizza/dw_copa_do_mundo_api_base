@@ -236,6 +236,43 @@
                 ]
             }
         },
+        "/api/sticker-search": {
+            "get": {
+                "tags": [
+                    "Sticker"
+                ],
+                "summary": "Pesquisa figurinha por Codigo + numero.",
+                "operationId": "2a986d26cd1754e7883165f01b89e172",
+                "parameters": [
+                    {
+                        "name": "sticker_code",
+                        "in": "query",
+                        "description": "Código do país",
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "sticker_number",
+                        "in": "query",
+                        "description": "Número do jogador",
+                        "schema": {
+                            "type": "Int"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da figurinha"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/user/sticker": {
             "post": {
                 "tags": [

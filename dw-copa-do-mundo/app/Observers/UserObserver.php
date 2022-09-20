@@ -2,7 +2,10 @@
 
 namespace App\Observers;
 
+use App\Mail\EmailVerification;
+use App\Mail\UserRegistered;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class UserObserver
 {
@@ -14,7 +17,7 @@ class UserObserver
      */
     public function created(User $user)
     {
-        //
+        Mail::to($user->email)->send(new EmailVerification($user));
     }
 
     /**

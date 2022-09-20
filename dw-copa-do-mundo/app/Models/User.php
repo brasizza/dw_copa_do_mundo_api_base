@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    public $unmask_password;
     /**
      * The attributes that are mass assignable.
      *
@@ -50,6 +50,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function setPasswordAttribute($password){
+        $this->unmask_password = $password;
         $newPass = Hash::make($password);
         $this->attributes['password'] = $newPass;
     }

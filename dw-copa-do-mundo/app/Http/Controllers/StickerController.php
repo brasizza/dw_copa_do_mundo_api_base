@@ -285,4 +285,47 @@ class StickerController extends Controller
     {
         //
     }
+
+  /**
+     * Pesquisa figurinha por Codigo + numero.
+     *
+     * @return \Illuminate\Http\Response
+      * @OA\Get(
+     *     path="/api/sticker-search",
+     *     tags={"Sticker"},
+ *     @OA\Response(
+     *         response=200,
+     *         description="Dados da figurinha"
+     *
+
+     *     ),
+      *     @OA\Parameter(
+     *         name="sticker_code",
+     *         in="query",
+     *         description="Código do país",
+     *         @OA\Schema(
+     *             type="String",
+     *         )
+     * ),
+     *     @OA\Parameter(
+     *         name="sticker_number",
+     *         in="query",
+     *         description="Número do jogador",
+     *         @OA\Schema(
+     *             type="Int",
+     *         )
+     * ),
+     *  security={{ "apiAuth": {} }}
+     * )
+
+     */
+    public function find(Request $request){
+
+      $sticker =   Sticker::where('sticker_code', $request->sticker_code)->where('sticker_number', $request->sticker_number)->first();
+
+      if($sticker){
+        return $this->successResponse($sticker);
+      }
+      return $this->errorResponse('Sticker not found' , Response::HTTP_NOT_FOUND);
+    }
 }
