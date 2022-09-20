@@ -21,6 +21,13 @@ namespace App\Http\Controllers;
 
  * )
  *
+   * @OA\Tag(
+ *     name="Sticker User",
+ *     description="Cadastro e visualização das figurinhas do usuário",
+
+ * )
+ *
+ *
 
  */
 

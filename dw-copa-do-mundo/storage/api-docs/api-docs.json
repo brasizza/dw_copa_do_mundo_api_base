@@ -236,6 +236,81 @@
                 ]
             }
         },
+        "/api/user/sticker": {
+            "post": {
+                "tags": [
+                    "Sticker User"
+                ],
+                "summary": "Cadastrar a figurinha escolhida para o usuário.",
+                "operationId": "48a88737e5813393827c57757a10ccb7",
+                "requestBody": {
+                    "content": {
+                        "text/json": {
+                            "schema": {
+                                "properties": {
+                                    "id_sticker": {
+                                        "description": "Id da figurinha",
+                                        "type": "text",
+                                        "example": "2"
+                                    },
+                                    "amount": {
+                                        "description": "Quantidade",
+                                        "type": "text",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Invalid input"
+                    },
+                    "200": {
+                        "description": "Figurinha inserida com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/stickers": {
+            "get": {
+                "tags": [
+                    "Sticker User"
+                ],
+                "summary": "Pegar as figurinhas do usuário",
+                "operationId": "fadd737f5d44aa7e1d5e80d6859e7289",
+                "parameters": [
+                    {
+                        "name": "duplicate",
+                        "in": "query",
+                        "description": "Mostrar somente duplicados? 1 para sim 0 para não",
+                        "schema": {
+                            "type": "int"
+                        }
+                    }
+                ],
+                "responses": {
+                    "422": {
+                        "description": "Invalid input"
+                    },
+                    "200": {
+                        "description": "Figurinhas listadas"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
@@ -305,6 +380,10 @@
         {
             "name": "Sticker",
             "description": "Cadastro e visualização das figurinhas"
+        },
+        {
+            "name": "Sticker User",
+            "description": "Cadastro e visualização das figurinhas do usuário"
         }
     ]
 }
