@@ -82,12 +82,31 @@
                 ]
             }
         },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh a token.",
+                "operationId": "Refresh token",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/countries": {
             "get": {
                 "tags": [
-                    "Sticker"
+                    "Sticker User"
                 ],
-                "summary": "Mostrar todos os paises da copa do mundo",
+                "summary": "Mostrar o album completo ordenado por país",
                 "operationId": "edaabf3348bf71d9cf65b87f44ec29ce",
                 "responses": {
                     "200": {

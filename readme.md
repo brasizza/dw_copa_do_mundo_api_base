@@ -38,6 +38,8 @@ docker-compose exec app bash
 Execute os seguintes comandos
 ```sh
 composer install
+npm install
+npm run build
 ```
 depois
 ```sh
@@ -50,7 +52,9 @@ php artisan config:cache
 
 e por ultimo
 ```sh
+php artisan db:wipe
 php artisan migrate
+php artisan db:seed
 ```
 
 Urls uteis

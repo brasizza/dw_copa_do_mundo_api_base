@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StickerUserRequest;
 use App\Models\Sticker;
 use App\Models\StickerUser;
+use App\Models\User;
 use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Http\Request;
@@ -141,6 +142,34 @@ class StickerUserController extends Controller
        return $this->successResponse($stickers);
     }
 
+
+    public function findStickersByCountry(User $user, $country){
+
+        $stickers = StickerUser::with(['sticker' => function ($query) use ($country) {
+
+            $query->where('sticker_code' , $country);
+        }])->
+        selectRaw('*,count(*)-1 as duplicate_stickers , count(*) as total_stickers ')->
+        where('id_user', $user->id)
+        ->groupBy('id_sticker')->get()->toArray();
+        if($stickers){
+            if($stickers[0]['sticker'] == null){
+                return null;
+            }
+        }
+
+        foreach($stickers as $idx=>&$stick){
+
+            $dados = ($stick['sticker']);
+            unset($stick['sticker']);
+
+            $stick = array_merge($stick,$dados);
+
+        }
+        return ($stickers);
+
+
+    }
     /**
      * Update the specified resource in storage.
      *

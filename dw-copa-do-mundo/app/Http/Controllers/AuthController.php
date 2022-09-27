@@ -118,6 +118,16 @@ class AuthController extends Controller
      * Refresh a token.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @OA\POST(
+     *     path="/api/auth/refresh",
+     *     tags={"Auth"},
+     *     operationId="Refresh token",
+     *      @OA\Response(
+     *         response=200,
+     *         description="Token refreshed",
+     *     ),
+     *  security={{ "apiAuth": {} }}
+     * )
      */
     public function refresh()
     {

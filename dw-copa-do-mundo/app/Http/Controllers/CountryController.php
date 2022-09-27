@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
@@ -12,12 +11,12 @@ class CountryController extends Controller
 
 
      /**
-     * Mostrar todos os paises da copa do mundo
+     * Mostrar o album completo ordenado por país
      *
      * @return \Illuminate\Http\Response
       * @OA\Get(
      *     path="/api/countries",
-     *     tags={"Sticker"},
+     *     tags={"Sticker User"},
  *     @OA\Response(
      *         response=200,
      *         description="Dados da figurinha"
@@ -30,8 +29,19 @@ class CountryController extends Controller
 
     public function index(){
 
+        $stickerController = new StickerUserController();
+        $countries =   (Country::orderBy('index')->get());
+        $user = Auth()->user();
 
-        return  $this->successResponse(Country::all());
+        foreach($countries as &$country){
+
+
+            $stickers = $stickerController->findStickersByCountry($user,$country['country_code']);
+            $country['stickers'] = $stickers;
+
+        }
+
+        return $this->successResponse($countries);
     }
     //
 }

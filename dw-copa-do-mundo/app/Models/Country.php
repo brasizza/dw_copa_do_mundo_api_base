@@ -18,7 +18,10 @@ class Country extends Model
 
 
         'country_name',
-        'country_code'
+        'country_code',
+        'index',
+        'stickers_start',
+        'stickers_end',
     ];
 
 
@@ -26,10 +29,7 @@ class Country extends Model
     public function getFlagAttribute()
     {
         if (!empty($this->attributes['country_code'])) {
-            return   asset(('flags/'.$this->attributes['country_code'].'.png'));
-
+            return   asset(('flags/' . $this->attributes['country_code'] . '.png'));
         }
-
     }
-
 }
