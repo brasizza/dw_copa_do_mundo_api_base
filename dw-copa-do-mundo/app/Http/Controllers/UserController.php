@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -80,7 +81,9 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $user = User::create($request->all());
+            $dados = $request->all();
+            $dados['token'] = Str::uuid();
+        $user = User::create($dados);
         return $this->successResponse($user);
     }
 

@@ -55,7 +55,7 @@ class Authenticate
                 return $this->errorResponse('Token inválido', Response::HTTP_UNAUTHORIZED);
             } catch (Exception  $e) {
 
-                return $this->errorResponse($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+                return $this->errorResponse($e->getMessage(), Response::HTTP_FORBIDDEN);
 
                 //return $this->errorResponse('Token inválido' , Response::HTTP_SERVICE_UNAVAILABLE);
             }
