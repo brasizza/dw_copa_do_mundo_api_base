@@ -328,4 +328,15 @@ class StickerController extends Controller
       }
       return $this->errorResponse('Sticker not found' , Response::HTTP_NOT_FOUND);
     }
+
+
+    public function findByCountry($country_code){
+
+        $sticker =   Sticker::where('sticker_code', $country_code)->pluck('id');
+
+        if($sticker == null){
+            return null;
+        }
+        return $sticker->toArray();
+      }
 }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
+use App\Traits\ApiResponser;
 
 class AuthController extends Controller
 {
+    use ApiResponser;
     /**
      * Fazer o login e pegar o token de autorização.
      *
@@ -88,8 +89,24 @@ class AuthController extends Controller
      * )
      */
     public function me()
+
     {
-        return response()->json(auth()->user());
+        $countryController = new CountryController();
+        $stickerUser = new StickerUserController();
+        $info = $stickerUser->getStickerInformations();
+
+
+        $total_duplicates = array_sum(array_column($info, 'total_stickers'));
+
+
+        $total_stickers = $countryController->calculateTotalStickers();
+        $dados = auth()->user()->toArray();
+        $dados['total_album'] = (int) $total_stickers->total_stickers;
+        $dados['total_stickers'] = count($info);
+        $dados['total_duplicates'] = ($total_duplicates);
+        $dados['total_complete'] = ($dados['total_album'] - $dados['total_stickers']);
+
+        return $this->successResponse($dados);
     }
 
     /**

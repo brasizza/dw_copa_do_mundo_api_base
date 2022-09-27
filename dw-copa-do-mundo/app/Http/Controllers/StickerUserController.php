@@ -70,37 +70,33 @@ class StickerUserController extends Controller
     {
 
         $user = Auth()->user();
-        try{
-        $sticker = Sticker::findOrFail($request->id_sticker);
-        }catch(Exception $e){
+        try {
+            $sticker = Sticker::findOrFail($request->id_sticker);
+        } catch (Exception $e) {
             return $this->errorResponse('Sticker not found', Response::HTTP_NOT_FOUND);
         }
         $creates = [];
-        for($i=0;$i < $request->amount ; $i++){
+        for ($i = 0; $i < $request->amount; $i++) {
             $creates[] = StickerUser::create([
 
                 'id_user' => $user['id'],
                 'id_sticker' => $request->id_sticker
             ]);
-
         }
 
         return $this->successResponse($creates);
-
-
-
     }
 
     /**
      * Pegar as figurinhas do usuário
-    * @OA\Get(
+     * @OA\Get(
      *     path="/api/user/stickers",
      *     tags={"Sticker User"},
      *     @OA\Response(
      *         response=422,
      *         description="Invalid input"
      *     ),
-    *     @OA\Parameter(
+     *     @OA\Parameter(
      *         name="duplicate",
      *         in="query",
      *
@@ -122,53 +118,48 @@ class StickerUserController extends Controller
     {
         $user = Auth()->user();
         $duplicates = 0;
-        if($request->has('duplicate')){
+        if ($request->has('duplicate')) {
             $duplicates = $request->duplicate;
         }
 
-        if($duplicates == 1){
+        if ($duplicates == 1) {
 
-            $stickers = StickerUser::with('sticker')->
-            selectRaw('*,count(*)-1 as total_stickers')->
-            having('total_stickers', '>', 0)->
-            where('id_user', $user->id)->groupBy('id_sticker')->get();
-        }else{
+            $stickers = StickerUser::with('sticker')->selectRaw('*,count(*)-1 as total_stickers')->having('total_stickers', '>', 0)->where('id_user', $user->id)->groupBy('id_sticker')->get();
+        } else {
 
-       $stickers = StickerUser::with('sticker')->
-       selectRaw('*,count(*) as total_stickers')->
-       where('id_user', $user->id)->groupBy('id_sticker')->get();
-
+            $stickers = StickerUser::with('sticker')->selectRaw('*,count(*) as total_stickers')->where('id_user', $user->id)->groupBy('id_sticker')->get();
         }
-       return $this->successResponse($stickers);
+        return $this->successResponse($stickers);
     }
 
 
-    public function findStickersByCountry(User $user, $country){
+    public function getStickerInformations()
+    {
+        $user = Auth()->user();
+        $stickers = StickerUser::selectRaw(' count(*) -1 total_stickers')->where('id_user', $user->id)->groupBy('id_sticker')->get();
+        return ($stickers->toArray());
+    }
 
-        $stickers = StickerUser::with(['sticker' => function ($query) use ($country) {
 
-            $query->where('sticker_code' , $country);
-        }])->
-        selectRaw('*,count(*)-1 as duplicate_stickers , count(*) as total_stickers ')->
-        where('id_user', $user->id)
-        ->groupBy('id_sticker')->get()->toArray();
-        if($stickers){
-            if($stickers[0]['sticker'] == null){
-                return null;
+    public function findStickersByCountry(User $user, $country)
+    {
+        $stickerController = new StickerController();
+        $stickers_ids = $stickerController->findByCountry($country);
+        $stickers = StickerUser::with(['sticker' => function ($query) use ($stickers_ids) {
+            return $query->whereIn('id', $stickers_ids);
+        }])->selectRaw('*,count(*)-1 as duplicate_stickers , count(*) as total_stickers ')->where('id_user', $user->id)->whereIn('id_sticker', $stickers_ids)
+            ->groupBy('id_sticker')->get()->toArray();
+        foreach ($stickers as &$stick) {
+            if ($stick['sticker'] == null) {
+                continue;
             }
-        }
-
-        foreach($stickers as $idx=>&$stick){
-
             $dados = ($stick['sticker']);
             unset($stick['sticker']);
-
-            $stick = array_merge($stick,$dados);
-
+            if ($dados != null) {
+                $stick = array_merge($stick, $dados);
+            }
         }
         return ($stickers);
-
-
     }
     /**
      * Update the specified resource in storage.

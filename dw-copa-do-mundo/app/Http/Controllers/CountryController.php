@@ -10,14 +10,14 @@ class CountryController extends Controller
     use ApiResponser;
 
 
-     /**
+    /**
      * Mostrar o album completo ordenado por país
      *
      * @return \Illuminate\Http\Response
-      * @OA\Get(
+     * @OA\Get(
      *     path="/api/countries",
      *     tags={"Sticker User"},
- *     @OA\Response(
+     *     @OA\Response(
      *         response=200,
      *         description="Dados da figurinha"
      *     ),
@@ -27,21 +27,29 @@ class CountryController extends Controller
 
      */
 
-    public function index(){
+    public function index()
+    {
 
         $stickerController = new StickerUserController();
         $countries =   (Country::orderBy('index')->get());
         $user = Auth()->user();
 
-        foreach($countries as &$country){
+        foreach ($countries as &$country) {
 
 
-            $stickers = $stickerController->findStickersByCountry($user,$country['country_code']);
+            $stickers = $stickerController->findStickersByCountry($user, $country['country_code']);
             $country['stickers'] = $stickers;
-
         }
 
         return $this->successResponse($countries);
+    }
+
+    public function calculateTotalStickers()
+    {
+
+
+        $total = Country::selectRaw('sum(stickers_end-stickers_start) as total_stickers')->first();
+        return $total;
     }
     //
 }
