@@ -82,6 +82,25 @@
                 ]
             }
         },
+        "/api/countries": {
+            "get": {
+                "tags": [
+                    "Sticker"
+                ],
+                "summary": "Mostrar todos os paises da copa do mundo",
+                "operationId": "edaabf3348bf71d9cf65b87f44ec29ce",
+                "responses": {
+                    "200": {
+                        "description": "Dados da figurinha"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/stickers": {
             "get": {
                 "tags": [

@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\StickerController;
 use App\Http\Controllers\StickerUserController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +31,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth');
 //Stickers
 Route::get('/stickers', [StickerController::class, 'index'])->middleware('auth');
+Route::get('/countries', [CountryController::class, 'index'])->middleware('auth');
+
 Route::post('/sticker', [StickerController::class, 'store'])->middleware('auth');
 Route::post('/sticker/{id}', [StickerController::class, 'update'])->middleware('auth');
 Route::get('/sticker/{id}', [StickerController::class, 'show'])->middleware('auth');
