@@ -30,6 +30,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 
 class StickerController extends Controller
@@ -145,6 +146,7 @@ class StickerController extends Controller
         }
 
         $postData['sticker_image'] = $path_imagem;
+        $postData['token'] = Str::uuid();
 
         try {
             $sticker = Sticker::create($postData);
