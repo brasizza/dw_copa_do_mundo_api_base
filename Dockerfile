@@ -2,7 +2,7 @@ FROM php:8.1.0-fpm
 
 # Arguments defined in docker-compose.yml
 ARG user=academia-do-flutter
-ARG uid=1
+ARG uid=1000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \

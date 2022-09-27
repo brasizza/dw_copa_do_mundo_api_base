@@ -6,7 +6,7 @@ services:
         build:
             args:
                 user: academia-do-flutter
-                uid: 1
+                uid: 1000
             context: ./
             dockerfile: Dockerfile
         image: app
