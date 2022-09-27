@@ -104,7 +104,8 @@ class AuthController extends Controller
         $dados['total_album'] = (int) $total_stickers->total_stickers;
         $dados['total_stickers'] = count($info);
         $dados['total_duplicates'] = ($total_duplicates);
-        $dados['total_complete'] = ($dados['total_album'] - $dados['total_stickers']);
+        $dados['total_complete'] = ($dados['total_album'] - ($dados['total_stickers'] ));
+        $dados['total_complete_percent'] = floor((  ($dados['total_stickers']*100))/$dados['total_album']);
 
         return $this->successResponse($dados);
     }
