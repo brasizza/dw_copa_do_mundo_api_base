@@ -312,6 +312,47 @@
             }
         },
         "/api/user/sticker": {
+            "put": {
+                "tags": [
+                    "Sticker User"
+                ],
+                "summary": "Atualizar a quantidade de figurinha escolhida de um usuário.",
+                "operationId": "7a1bd6e4c98cf9c2c43ddc209e69e7bc",
+                "requestBody": {
+                    "content": {
+                        "text/json": {
+                            "schema": {
+                                "properties": {
+                                    "id_sticker": {
+                                        "description": "Id da figurinha",
+                                        "type": "text",
+                                        "example": "2"
+                                    },
+                                    "amount": {
+                                        "description": "Quantidade",
+                                        "type": "text",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Invalid input"
+                    },
+                    "200": {
+                        "description": "Quantidade atualizada com sucesso"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Sticker User"

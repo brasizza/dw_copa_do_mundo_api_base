@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StickerUserRequest;
+use App\Http\Requests\StickerUserRequestUpdate;
 use App\Models\Sticker;
 use App\Models\StickerUser;
 use App\Models\User;
@@ -162,15 +163,79 @@ class StickerUserController extends Controller
         return ($stickers);
     }
     /**
-     * Update the specified resource in storage.
+     * Atualizar a quantidade de figurinha escolhida de um usuário.
      *
      * @param  \App\Http\Requests\StickerUserRequest  $request
      * @param  \App\Models\StickerUser  $stickerUser
      * @return \Illuminate\Http\Response
+     * @OA\Put(
+     *     path="/api/user/sticker",
+     *     tags={"Sticker User"},
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid input"
+     *     ),
+
+     *     @OA\Response(
+     *         response=200,
+     *         description="Quantidade atualizada com sucesso"
+     *     ),
+     * @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="text/json",
+     *             @OA\Schema(
+     *
+     *  @OA\Property(
+     *                     description="Id da figurinha",
+     *                     property="id_sticker",
+     *                      example="2",
+     *                     type="text",
+     *                ),
+     *
+     *  @OA\Property(
+     *                     description="Quantidade",
+     *                     property="amount",
+     *                      example="1",
+     *                     type="text",
+     *                ),
+     * ),
+     * ),
+     * ),
+     *  security={{ "apiAuth": {} }}
+     * )
      */
-    public function update(StickerUserRequest $request, StickerUser $stickerUser)
+    public function update(StickerUserRequestUpdate $request)
     {
-        //
+        $user = auth()->user();
+        $id_sticker = $request->id_sticker;
+        $amount = $request->amount;
+        $stickers = StickerUser::where('id_sticker', $id_sticker)->where('id_user', $user->id)->get();
+
+        $total_stickers = count($stickers);
+        if ($total_stickers == 0) {
+            return $this->errorResponse('Sticker not found', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        if ($amount == 0) {
+            $deleted =  StickerUser::where('id_sticker', $id_sticker)->where('id_user', $user->id)->delete();
+            return $this->successResponse(['msg' => 'All stickers deleted']);
+        }
+        $left = $amount - $total_stickers;
+
+        if($left == 0){
+
+            return $this->successResponse(['msg' => 'Nothing happened']);
+
+        }
+        if ($left > 0) {
+            $stickerUserRequest = new StickerUserRequest(['id_sticker' => $id_sticker, 'amount' => $left]);
+            return $this->store($stickerUserRequest);
+        } else {
+            $deleteAmount = abs($left);
+            for ($deleteIndex = 0; $deleteIndex != $deleteAmount; $deleteIndex++) {
+                $this->destroy($stickers[$deleteIndex]);
+            }
+            return $this->successResponse(['msg' => 'Stickers was downgraded']);
+        }
     }
 
     /**
@@ -181,6 +246,6 @@ class StickerUserController extends Controller
      */
     public function destroy(StickerUser $stickerUser)
     {
-        //
+        $stickerUser->delete();
     }
 }

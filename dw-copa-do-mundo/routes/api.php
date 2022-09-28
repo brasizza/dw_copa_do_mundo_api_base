@@ -40,4 +40,6 @@ Route::get('/sticker-search', [StickerController::class, 'find'])->middleware('a
 
 
 Route::post('/user/sticker', [StickerUserController::class , 'store'] )->middleware('auth');
+Route::put ('/user/sticker', [StickerUserController::class , 'update'] )->middleware('auth');
+
 Route::get('/user/stickers', [StickerUserController::class , 'show'] )->middleware('auth');
