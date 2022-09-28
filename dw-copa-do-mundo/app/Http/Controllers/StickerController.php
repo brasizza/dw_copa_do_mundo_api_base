@@ -135,6 +135,10 @@ class StickerController extends Controller
     public function store(StickerRequest $request)
     {
 
+        $sticker =   Sticker::where('sticker_code', $request->sticker_code)->where('sticker_number', $request->sticker_number)->first();
+        if($sticker != null){
+            return $this->successResponse($sticker);
+        }
         $postData =  ($request->all());
         if ($request->hasFile('sticker_image_upload')) {
             $image = $this->buildImage($request->sticker_image_upload);
