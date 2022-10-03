@@ -37,7 +37,7 @@ class CountryController extends Controller
         foreach ($countries as &$country) {
 
 
-            $stickers = $stickerController->findStickersByCountry($user, $country['country_code']);
+            $stickers = $stickerController->findStickersByCountry($user, $country);
             $country['stickers'] = $stickers;
         }
 

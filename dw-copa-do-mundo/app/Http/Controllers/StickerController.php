@@ -336,13 +336,19 @@ class StickerController extends Controller
     }
 
 
-    public function findByCountry($country_code){
+    public function findByCountry($country){
 
-        $sticker =   Sticker::where('sticker_code', $country_code)->pluck('id');
+        $sticker =   Sticker::where('sticker_code', $country['country_code'])->
+        whereBetween('sticker_number', array($country['stickers_start'], $country['stickers_end']))->
+        pluck('id');
 
         if($sticker == null){
             return null;
         }
         return $sticker->toArray();
       }
+
+
+
+
 }
